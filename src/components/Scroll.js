@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const Scroll = (props) => {
-  return (
-    <div style={{ overflow: 'scroll', border: '5px solid black', height: '800px'}}>
-      {props.children}
-    </div>
-  );
-};
+class Scroll extends Component {
+    render() {
+        return (
+            <div style={{ overflowY: 'scroll', border: '1px solid black', height: '600px' }}>
+                {this.props.children}
+            </div>
+        );
+    }
+}
 
 export default Scroll;
