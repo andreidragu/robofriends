@@ -12,7 +12,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearchChange }) => {
     };
 
     return (
-        <Input m={3} placeholder="Search a robot" maxW="350px" onChange={handleInputChange} />
+        <Input m={3} bg="blue.50" placeholder="Search a robot" maxW="250px" onChange={handleInputChange} />
     );
 };
 

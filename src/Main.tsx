@@ -1,31 +1,66 @@
 import React, { useEffect, useState } from 'react';
-import { ChakraProvider, theme, Box, Heading } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box, Heading } from '@chakra-ui/react';
 
+import { Fonts } from './Fonts';
+import Scroll from './components/Scroll';
 import CardList from './components/CardList';
 import SearchBox from './components/SearchBox';
-import { allRobots, Robot } from './datasets/robots';
+import { IRobot } from './typings/IRobot';
 
+const theme = extendTheme({
+    styles: {
+        global: {
+            "body": {
+                width: "100%",
+                height: "100%",
+                bgGradient: "linear(to-r, teal.500, blue.900)",
+                overflow: "hidden"
+            }
+        }
+    }
+});
 
 const Main: React.FC = () => {
-    const [robots, setRobots] = useState<Robot[]>([]);
-    const [searchRobot, setSearchRobot] = useState<string>('');
+    const [allRobots, setAllRobots] = useState<IRobot[]>([]);
+    const [filteredRobots, setFilteredRobots] = useState<IRobot[]>([]);
+    const [searchText, setSearchText] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const handleSearchChange = (value: string) => {
-        setSearchRobot(value);
+    const fetchRobots = async () => {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        const json = await response.json();
+        setAllRobots(json);
+        setIsLoading(false);
     };
 
     useEffect(() => {
-        setRobots(allRobots.filter(robot => {
-            return robot.name.toLowerCase().includes(searchRobot.toLowerCase());
+        fetchRobots();
+    }, []);
+
+    const handleSearchChange = (value: string) => {
+        setSearchText(value);
+    };
+
+    useEffect(() => {
+        setFilteredRobots(allRobots.filter(robot => {
+            return robot.name.toLowerCase().includes(searchText.toLowerCase());
         }));
-    }, [searchRobot]);
+    }, [allRobots, searchText]);
 
     return (
         <ChakraProvider theme={theme}>
+            <Fonts />
             <Box textAlign="center">
-                <Heading>RoboFriends</Heading>
-                <SearchBox onSearchChange={handleSearchChange} />
-                <CardList robots={robots} />
+                <Heading as="h1" size="2xl" fontFamily="SEGA LOGO FONT" fontWeight={200} color="teal.300" m={5}>RoboFriends</Heading>
+                {isLoading
+                    ? <Heading color="gray.900" m={5}>Loading...</Heading>
+                    : <React.Fragment>
+                        <SearchBox onSearchChange={handleSearchChange} />
+                        <Scroll>
+                            <CardList robots={filteredRobots} />
+                        </Scroll>
+                    </React.Fragment>
+                }
             </Box>
         </ChakraProvider>
     );
