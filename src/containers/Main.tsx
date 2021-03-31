@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ChakraProvider, extendTheme, Box, Heading } from '@chakra-ui/react';
 
-import { Fonts } from './Fonts';
-import Scroll from './components/Scroll';
-import CardList from './components/CardList';
-import SearchBox from './components/SearchBox';
-import { IRobot } from './typings/IRobot';
+import { Fonts } from '../Fonts';
+import Scroll from '../components/Scroll';
+import CardList from '../components/CardList';
+import SearchBox from '../components/SearchBox';
+import { IRobot } from '../typings/IRobot';
 
 const theme = extendTheme({
     styles: {
@@ -30,7 +30,7 @@ const Main: React.FC = () => {
         const response = await fetch('https://jsonplaceholder.typicode.com/users');
         const json = await response.json();
         setAllRobots(json);
-        setIsLoading(false);
+        setTimeout(() => {setIsLoading(false);}, 3000);
     };
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const Main: React.FC = () => {
                     ? <Heading color="gray.900" m={5}>Loading...</Heading>
                     : <React.Fragment>
                         <SearchBox onSearchChange={handleSearchChange} />
-                        <Scroll>
+                        <Scroll offsetH={155}>
                             <CardList robots={filteredRobots} />
                         </Scroll>
                     </React.Fragment>

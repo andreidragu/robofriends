@@ -1,10 +1,14 @@
 import React from 'react';
 import { Box } from '@chakra-ui/react';
 
-const Scroll: React.FC = (props) => {
+type ScrollProps = {
+    offsetH: number;
+};
+
+const Scroll: React.FC<ScrollProps> = ({ offsetH, children }) => {
     return (
-        <Box overflowY="auto" border="1px solid black" height="800px">
-            {props.children}
+        <Box overflowY="auto" border="1px solid black" height={`calc(100vh - ${offsetH}px)`}>
+            {children}
         </Box>
     );
 };
