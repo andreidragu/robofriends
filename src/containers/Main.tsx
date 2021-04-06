@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ChakraProvider, extendTheme, Box, Heading } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box, Heading, Text } from '@chakra-ui/react';
 
-import { Fonts } from '../Fonts';
+import { Fonts } from '../components/Fonts';
 import Scroll from '../components/Scroll';
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
-import { IRobot } from '../typings/IRobot';
+import ErrorBoundary from '../components/ErrorBoundary';
+
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { fetchRobotsStart } from '../redux/robots/robots.slice';
 
 const theme = extendTheme({
     styles: {
@@ -21,31 +24,22 @@ const theme = extendTheme({
 });
 
 const Main: React.FC = () => {
-    const [allRobots, setAllRobots] = useState<IRobot[]>([]);
-    const [filteredRobots, setFilteredRobots] = useState<IRobot[]>([]);
-    const [searchText, setSearchText] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    const fetchRobots = async () => {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users');
-        const json = await response.json();
-        setAllRobots(json);
-        setTimeout(() => {setIsLoading(false);}, 3000);
-    };
+    const robots = useAppSelector(state => state.robotsState.robots);
+    const isLoading = useAppSelector(state => state.robotsState.isFetching);
+    const errorMessage = useAppSelector(state => state.robotsState.errorMessage);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        fetchRobots();
-    }, []);
+        dispatch(fetchRobotsStart());
+    }, [dispatch]);
+
+    const [searchField, setSearchField] = useState<string>('');
 
     const handleSearchChange = (value: string) => {
-        setSearchText(value);
+        setSearchField(value);
     };
 
-    useEffect(() => {
-        setFilteredRobots(allRobots.filter(robot => {
-            return robot.name.toLowerCase().includes(searchText.toLowerCase());
-        }));
-    }, [allRobots, searchText]);
+    const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
 
     return (
         <ChakraProvider theme={theme}>
@@ -54,12 +48,16 @@ const Main: React.FC = () => {
                 <Heading as="h1" size="2xl" fontFamily="SEGA LOGO FONT" fontWeight={200} color="teal.300" m={5}>RoboFriends</Heading>
                 {isLoading
                     ? <Heading color="gray.900" m={5}>Loading...</Heading>
-                    : <React.Fragment>
-                        <SearchBox onSearchChange={handleSearchChange} />
-                        <Scroll offsetH={155}>
-                            <CardList robots={filteredRobots} />
-                        </Scroll>
-                    </React.Fragment>
+                    : errorMessage
+                        ? <Text fontSize="md" mt="1">{errorMessage}</Text>
+                        : <React.Fragment>
+                            <SearchBox onSearchChange={handleSearchChange} />
+                            <Scroll offsetH={155}>
+                                <ErrorBoundary>
+                                    <CardList robots={filteredRobots} />
+                                </ErrorBoundary>
+                            </Scroll>
+                        </React.Fragment>
                 }
             </Box>
         </ChakraProvider>

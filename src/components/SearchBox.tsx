@@ -1,11 +1,11 @@
-import React from 'react';
+import type React from 'react';
 import { Input } from '@chakra-ui/react';
 
-type SearchBoxProps = {
+type TSearchBoxProps = {
     onSearchChange: (value: string) => void;
 };
 
-const SearchBox: React.FC<SearchBoxProps> = ({ onSearchChange }) => {
+const SearchBox: React.FC<TSearchBoxProps> = ({ onSearchChange }) => {
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
         onSearchChange(event.target.value);
