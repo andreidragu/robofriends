@@ -11,7 +11,18 @@ const store = configureStore({
     middleware: [...getDefaultMiddleware({ thunk: false }), sagaMiddleware]
 });
 
-sagaMiddleware.run(rootSaga);
+let sagaTask = sagaMiddleware.run(rootSaga);
+
+if (process.env.NODE_ENV !== 'production' && module.hot) {
+    module.hot.accept('./reducer', () => store.replaceReducer(rootReducer));
+    module.hot.accept('./saga', () => {
+        const newRootSaga = require('./saga').default;
+        sagaTask.cancel();
+        sagaTask.toPromise().then(() => {
+            sagaTask = sagaMiddleware.run(newRootSaga);
+        });
+    });
+}
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
