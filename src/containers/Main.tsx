@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ChakraProvider, extendTheme, Box, Heading, Text } from '@chakra-ui/react';
 
 import { Fonts } from '../components/Fonts';
@@ -9,6 +9,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { fetchRobotsStart } from '../redux/robots/robots.slice';
+import { searchFieldTyping } from '../redux/search/search.slice';
 
 const theme = extendTheme({
     styles: {
@@ -27,16 +28,16 @@ const Main: React.FC = () => {
     const robots = useAppSelector(state => state.robotsState.robots);
     const isLoading = useAppSelector(state => state.robotsState.isFetching);
     const errorMessage = useAppSelector(state => state.robotsState.errorMessage);
+    const searchField = useAppSelector(state => state.searchState.searchField);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(fetchRobotsStart());
     }, [dispatch]);
 
-    const [searchField, setSearchField] = useState<string>('');
 
     const handleSearchChange = (value: string) => {
-        setSearchField(value);
+        dispatch(searchFieldTyping(value));
     };
 
     const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));

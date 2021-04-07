@@ -1,7 +1,7 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ERobotsActionType, IRobot } from './robots.type';
-import type { RootState } from '../store';
+import { RootState } from '../store';
 
 // Define a type for the slice state
 interface IRobotsState {
@@ -38,10 +38,12 @@ export const robotsSlice = createSlice({
     //     fetchRobotsSuccess: (state, action: PayloadAction<IRobot[]>) => {
     //         state.isFetching = false;
     //         state.robots = action.payload;
+    //         state.errorMessage = '';
     //     },
     //     fetchRobotsFailure: (state, action: PayloadAction<string>) => {
     //         state.isFetching = false;
     //         state.errorMessage = action.payload;
+    //         state.robots = [];
     //     }
     // },
     reducers: {},
@@ -57,10 +59,12 @@ export const robotsSlice = createSlice({
         builder.addCase(fetchRobotsSuccess, (state, action: PayloadAction<IRobot[]>) => {
             state.isFetching = false;
             state.robots = action.payload;
+            state.errorMessage = '';
         });
         builder.addCase(fetchRobotsFailure, (state, action: PayloadAction<string>) => {
             state.isFetching = false;
             state.errorMessage = action.payload;
+            state.robots = [];
         });
     }
 });
