@@ -1,15 +1,14 @@
 import type React from 'react';
-import { useEffect, useMemo } from 'react';
-import { ChakraProvider, extendTheme, Box, Heading, Text } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 
 import Fonts from '../components/Fonts';
-import Header from './Header';
+import Heading from './Heading';
 import SearchBox from './SearchBox';
 import Robots from './Robots';
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { fetchRobotsStart } from '../redux/robots/robots.slice';
-import { searchFieldTyping } from '../redux/search/search.slice';
 
 const theme = extendTheme({
     styles: {
@@ -26,23 +25,13 @@ const theme = extendTheme({
 
 const Main: React.FC = () => {
     const robots = useAppSelector(state => state.robotsState.robots);
+    const searchField = useAppSelector(state => state.searchState.searchField);
     const isLoading = useAppSelector(state => state.robotsState.isFetching);
     const errorMessage = useAppSelector(state => state.robotsState.errorMessage);
-    const searchField = useAppSelector(state => state.searchState.searchField);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(fetchRobotsStart());
-    }, [dispatch]);
-
-    const searchBoxComponent = useMemo(() => {
-        const handleSearchChange = (value: string) => {
-            dispatch(searchFieldTyping(value));
-        };
-
-        return (
-            <SearchBox onSearchChange={handleSearchChange} />
-        );
     }, [dispatch]);
 
     const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
@@ -51,16 +40,16 @@ const Main: React.FC = () => {
         <ChakraProvider theme={theme}>
             <Fonts />
             <Box textAlign="center">
-                <Header />
+                <Heading size="2xl" fontFamily="SEGA LOGO FONT" fontWeight={200}>RoboFriends</Heading>
                 {isLoading
-                    ? <Heading color="teal.300" m={5}>Loading...</Heading>
+                    ? <Heading>Loading...</Heading>
                     : errorMessage
-                        ? <Text fontSize="md" mt="1">{errorMessage}</Text>
+                        ? <Heading>{errorMessage}</Heading>
                         : <>
-                            {searchBoxComponent}
+                            <SearchBox />
                             {filteredRobots.length
                                 ? <Robots robots={filteredRobots} />
-                                : <Text fontSize="lg" mt="2" color="teal.300">No robots found :(</Text>
+                                : <Heading size="l">No robots found :(</Heading>
                             }
                         </>
                 }

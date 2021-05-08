@@ -1,4 +1,5 @@
-import React from 'react';
+import type React from 'react';
+import { memo as ReactMemo } from 'react';
 
 import { IRobot } from '../redux/robots/robots.type';
 import Scroll from '../components/Scroll';
@@ -11,7 +12,7 @@ type TRobotsProps = {
 
 const BreakException = {};
 
-const Robots: React.FC<TRobotsProps> = React.memo(({ robots }) => {
+const Robots: React.FC<TRobotsProps> = ReactMemo(({ robots }) => {
     return (
         <Scroll offsetH={155}>
             <ErrorBoundary>
@@ -35,5 +36,6 @@ const Robots: React.FC<TRobotsProps> = React.memo(({ robots }) => {
     }
     return propsAreEqual;
 });
+Robots.displayName = 'Robots';
 
 export default Robots;

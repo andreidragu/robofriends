@@ -1,19 +1,19 @@
 import type React from 'react';
-import { useState, useRef } from 'react';
+import { useState, useRef, memo as ReactMemo } from 'react';
 import { Input, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
 import { FiX } from 'react-icons/fi';
 
-type TSearchBoxProps = {
-    onSearchChange: (value: string) => void;
-};
+import { useAppDispatch } from '../redux/hooks';
+import { searchFieldTyping } from '../redux/search/search.slice';
 
-const SearchBox: React.FC<TSearchBoxProps> = ({ onSearchChange }) => {
+const SearchBox: React.FC = ReactMemo(() => {
     const [value, setValue] = useState<string>('');
     const inputRef = useRef<HTMLInputElement>(null);
+    const dispatch = useAppDispatch();
 
     const handleClearClick: React.MouseEventHandler<HTMLButtonElement> = () => {
         if (value) {
-            onSearchChange('');
+            dispatch(searchFieldTyping(''));
             setValue('');
             inputRef.current?.focus();
         }
@@ -21,7 +21,7 @@ const SearchBox: React.FC<TSearchBoxProps> = ({ onSearchChange }) => {
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
         const value = event.target.value;
-        onSearchChange(value);
+        dispatch(searchFieldTyping(value));
         setValue(value);
     };
 
@@ -49,6 +49,7 @@ const SearchBox: React.FC<TSearchBoxProps> = ({ onSearchChange }) => {
             />
         </InputGroup>
     );
-};
+});
+SearchBox.displayName = 'SearchBox';
 
 export default SearchBox;
