@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import type React from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChakraProvider, extendTheme, Box, Heading, Text } from '@chakra-ui/react';
 
-import { Fonts } from '../components/Fonts';
-import Scroll from '../components/Scroll';
-import CardList from '../components/CardList';
-import SearchBox from '../components/SearchBox';
-import ErrorBoundary from '../components/ErrorBoundary';
+import Fonts from '../components/Fonts';
+import Header from './Header';
+import SearchBox from './SearchBox';
+import Robots from './Robots';
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { fetchRobotsStart } from '../redux/robots/robots.slice';
@@ -35,10 +35,15 @@ const Main: React.FC = () => {
         dispatch(fetchRobotsStart());
     }, [dispatch]);
 
+    const searchBoxComponent = useMemo(() => {
+        const handleSearchChange = (value: string) => {
+            dispatch(searchFieldTyping(value));
+        };
 
-    const handleSearchChange = (value: string) => {
-        dispatch(searchFieldTyping(value));
-    };
+        return (
+            <SearchBox onSearchChange={handleSearchChange} />
+        );
+    }, [dispatch]);
 
     const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
 
@@ -46,19 +51,18 @@ const Main: React.FC = () => {
         <ChakraProvider theme={theme}>
             <Fonts />
             <Box textAlign="center">
-                <Heading as="h1" size="2xl" fontFamily="SEGA LOGO FONT" fontWeight={200} color="teal.300" m={5}>RoboFriends</Heading>
+                <Header />
                 {isLoading
-                    ? <Heading color="gray.900" m={5}>Loading...</Heading>
+                    ? <Heading color="teal.300" m={5}>Loading...</Heading>
                     : errorMessage
                         ? <Text fontSize="md" mt="1">{errorMessage}</Text>
-                        : <React.Fragment>
-                            <SearchBox onSearchChange={handleSearchChange} />
-                            <Scroll offsetH={155}>
-                                <ErrorBoundary>
-                                    <CardList robots={filteredRobots} />
-                                </ErrorBoundary>
-                            </Scroll>
-                        </React.Fragment>
+                        : <>
+                            {searchBoxComponent}
+                            {filteredRobots.length
+                                ? <Robots robots={filteredRobots} />
+                                : <Text fontSize="lg" mt="2" color="teal.300">No robots found :(</Text>
+                            }
+                        </>
                 }
             </Box>
         </ChakraProvider>

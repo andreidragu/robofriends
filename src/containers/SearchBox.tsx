@@ -36,7 +36,8 @@ const SearchBox: React.FC<TSearchBoxProps> = ({ onSearchChange }) => {
                             icon={<FiX />}
                             aria-label="Clear search field"
                             _focus={{ boxShadow: 'none' }}
-                            onClick={handleClearClick} />
+                            onClick={handleClearClick}
+                        />
                     }
                 />
             }

@@ -13,7 +13,7 @@ function* fetchRobotsWorker () {
     try {
         yield delay(2000);
 
-        if (Math.random() >= 0.5) {
+        if (Math.random() > 0.2) {
             const robots: IRobot[] = yield call(doFetchRobots);
             yield put(fetchRobotsSuccess(robots));
             yield put(searchFieldChange(''));

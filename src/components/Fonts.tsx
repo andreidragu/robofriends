@@ -1,7 +1,7 @@
 import type React from 'react';
 import { Global } from '@emotion/react';
 
-export const Fonts: React.FC = () => (
+const Fonts: React.FC = () => (
     <Global
         styles={`
             @font-face {
@@ -14,3 +14,5 @@ export const Fonts: React.FC = () => (
         `}
     />
 );
+
+export default Fonts;
