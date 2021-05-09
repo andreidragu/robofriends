@@ -2,8 +2,8 @@ import type React from 'react';
 import { Global } from '@emotion/react';
 
 const Fonts: React.FC = () => (
-    <Global
-        styles={`
+  <Global
+    styles={`
             @font-face {
                 font-family: 'SEGA LOGO FONT';
                 font-style: normal;
@@ -12,7 +12,7 @@ const Fonts: React.FC = () => (
                 src: local('SEGA LOGO FONT'), url(${process.env.PUBLIC_URL}/SEGA.woff) format('woff');
             }
         `}
-    />
+  />
 );
 
 export default Fonts;

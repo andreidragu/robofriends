@@ -7,48 +7,48 @@ import { useAppDispatch } from '../redux/hooks';
 import { searchFieldTyping } from '../redux/search/search.slice';
 
 const SearchBox: React.FC = ReactMemo(() => {
-    const [value, setValue] = useState<string>('');
-    const inputRef = useRef<HTMLInputElement>(null);
-    const dispatch = useAppDispatch();
+  const [value, setValue] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
 
-    const handleClearClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-        if (value) {
-            dispatch(searchFieldTyping(''));
-            setValue('');
-            inputRef.current?.focus();
-        }
-    };
+  const handleClearClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+    if (value) {
+      dispatch(searchFieldTyping(''));
+      setValue('');
+      inputRef.current?.focus();
+    }
+  };
 
-    const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-        const value = event.target.value;
-        dispatch(searchFieldTyping(value));
-        setValue(value);
-    };
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+    const value = event.target.value;
+    dispatch(searchFieldTyping(value));
+    setValue(value);
+  };
 
-    return (
-        <InputGroup m={3} bg="blue.50" maxW="250px" mx="auto">
-            {value &&
-                <InputRightElement
-                    children={
-                        <IconButton
-                            variant="ghost"
-                            size="sm"
-                            icon={<FiX />}
-                            aria-label="Clear search field"
-                            _focus={{ boxShadow: 'none' }}
-                            onClick={handleClearClick}
-                        />
-                    }
-                />
-            }
-            <Input
-                placeholder="Search a robot"
-                ref={inputRef}
-                value={value}
-                onChange={handleInputChange}
+  return (
+    <InputGroup m={3} bg="blue.50" maxW="250px" mx="auto">
+      {value &&
+        <InputRightElement
+          children={
+            <IconButton
+              variant="ghost"
+              size="sm"
+              icon={<FiX />}
+              aria-label="Clear search field"
+              _focus={{ boxShadow: 'none' }}
+              onClick={handleClearClick}
             />
-        </InputGroup>
-    );
+          }
+        />
+      }
+      <Input
+        placeholder="Search a robot"
+        ref={inputRef}
+        value={value}
+        onChange={handleInputChange}
+      />
+    </InputGroup>
+  );
 });
 SearchBox.displayName = 'SearchBox';
 
