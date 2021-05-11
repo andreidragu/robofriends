@@ -1,6 +1,6 @@
 {
   "name": "robofriends-chakra",
-  "homepage": "https://andreidragu.github.io/robofriends",
+  "homepage": "https://andreidragu.github.io/robofriends/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -28,7 +28,19 @@
     "redux": "^4.1.0",
     "redux-saga": "^1.1.3",
     "typescript": "^4.2.4",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "workbox-background-sync": "^6.1.5",
+    "workbox-broadcast-update": "^6.1.5",
+    "workbox-cacheable-response": "^6.1.5",
+    "workbox-core": "^6.1.5",
+    "workbox-expiration": "^6.1.5",
+    "workbox-google-analytics": "^6.1.5",
+    "workbox-navigation-preload": "^6.1.5",
+    "workbox-precaching": "^6.1.5",
+    "workbox-range-requests": "^6.1.5",
+    "workbox-routing": "^6.1.5",
+    "workbox-strategies": "^6.1.5",
+    "workbox-streams": "^6.1.5"
   },
   "scripts": {
     "start": "PUBLIC_URL=/ craco start",
