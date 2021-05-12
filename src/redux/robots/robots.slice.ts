@@ -1,7 +1,7 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ERobotsActionType, IRobot } from './robots.type';
-import { RootState } from '../store';
+import { useAppSelector } from '../hooks';
 
 // Define a type for the slice state
 interface IRobotsState {
@@ -75,6 +75,10 @@ export const robotsSlice = createSlice({
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.robots.robots)`
-export const selectRobots = (state: RootState) => state.robotsState.robots;
+export const useRobots = () => useAppSelector(state => state.robotsState.robots);
+
+export const useRobotsSelector = <T> (robotsStateSelector: (robotsState: IRobotsState) => T) => {
+  return useAppSelector(store => robotsStateSelector(store.robotsState));
+};
 
 export default robotsSlice.reducer;

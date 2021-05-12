@@ -1,15 +1,15 @@
 import type React from 'react';
-import { useEffect, lazy as ReactLazy, Suspense } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 
 import Fonts from '../components/Fonts';
 import Loading from '../components/Loading';
 import Heading from './Heading';
 
-import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import { fetchRobotsStart } from '../redux/robots/robots.slice';
+import { useAppDispatch } from '../redux/hooks';
+import { useRobotsSelector, fetchRobotsStart } from '../redux/robots/robots.slice';
 
-const ContentBodyLazy = ReactLazy(() => import('./ContentBody'));
+const ContentBody = lazy(() => import('./ContentBody'));
 
 const theme = extendTheme({
   styles: {
@@ -25,14 +25,12 @@ const theme = extendTheme({
 });
 
 const Main: React.FC = () => {
-  const isLoading = useAppSelector(state => state.robotsState.isFetching);
-  const errorMessage = useAppSelector(state => state.robotsState.errorMessage);
+  const { isLoading, errorMessage } = useRobotsSelector(({ isFetching, errorMessage }) => ({ isLoading: isFetching, errorMessage }));
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchRobotsStart());
   }, [dispatch]);
-
 
   return (
     <ChakraProvider theme={theme}>
@@ -43,7 +41,7 @@ const Main: React.FC = () => {
           ? <Loading />
           : errorMessage
             ? <Heading>{errorMessage}</Heading>
-            : <Suspense fallback={<Loading />}><ContentBodyLazy /></Suspense>
+            : <Suspense fallback={<Loading />}><ContentBody /></Suspense>
         }
       </Box>
     </ChakraProvider>

@@ -1,6 +1,7 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 
 import { ESearchActionType } from './search.type';
+import { useAppSelector } from '../hooks';
 
 // Define a type for the slice state
 interface ISearchState {
@@ -31,5 +32,7 @@ export const searchSlice = createSlice({
     });
   }
 });
+
+export const useSearchField = () => useAppSelector(state => state.searchState.searchField);
 
 export default searchSlice.reducer;
